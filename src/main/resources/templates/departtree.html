@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Insert title here</title>
+<!-- 导入jQuery -->
+<script th:src="@{webjars/jquery/3.2.1/jquery.js}" type="text/javascript" charset="utf-8"></script>
+<!-- 导入bootstrap -->
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/3.2.0/css/bootstrap.min.css}"
+	href="/webjars/bootstrap/3.2.0/css/bootstrap.min.css" />
+	<link rel="stylesheet"
+	th:href="@{/bootstrap3/bootstrap-table/bootstrap-table.css}"
+	href="bootstrap3/bootstrap-table/bootstrap-table.css" />
+	
+	<script type="text/javascript"  th:src="@{/js/bootstrap-treeview.js}"></script>
+	<script type="text/javascript"  th:src="@{/js/tableExport.js}"></script>
+</head>
+<body>
+
+ <!-- 实现table数据以Excel格式导出 -->
+<button type="button"  style="margin-left:50px" id="btn_download" 
+class="btn btn-primary" onClick ="$('#tb_employees').tableExport({ type: 'excel', escape: 'false' })">数据导出</button>
+       <div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-4 col-md-3" id="tree"></div>
+			<div class="col-xs-8 col-md-9" id="emp">
+				<table id="tb_employees" class="table table-bordered">
+					<thead>
+						<tr>
+							<th>姓名</th>
+							<th>员工编号</th>
+							<th>性别</th>
+							<th>城市</th>
+							<th>员工类别</th>
+							<th>部门名称</th>
+							<th>岗位序列</th>
+							<th>岗位级别</th>
+							<th>岗位名称</th>
+						</tr>
+					</thead>
+					<tbody id="tbody"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+ 
+ <script type="text/javascript">
+	/*<![CDATA[*/ 
+		
+		
+		//实现树
+ $(function(){
+	
+			$.post("tree/showTree",function(data){
+				
+				var tree = JSON.parse(data);
+				$('#tree').treeview({data: tree}); 
+				$('#tree').on('nodeSelected', function(event, data) {  
+				     arr = $('#tree').treeview('getSelected'); 
+				     console.info(arr);
+				     $.ajax({
+				    	 type: "GET",
+			             url: "tree/"+arr[0].href,
+			             //dataType: "json",
+			             success: function(json){
+			            	 console.info(json);
+			            	 var emps = JSON.parse(json);
+			 				$('#tbody').empty();
+			 				for(var i in emps){ 
+			 					var head =
+			 					
+			 					$('#tbody').append("<tr><td>"+emps[i].empName+"</td><td>"+emps[i].empNumber+
+			 							"</td><td>"+emps[i].gender+"</td><td>"+emps[i].city+
+			 							"</td><td>"+emps[i].category+"</td><td>"+emps[i].departments[0].departName+
+			 							"</td><td>"+emps[i].jobSequence+"</td><td>"+emps[i].jobLevel+
+			 							"</td><td>"+emps[i].jobName+"</td></tr>")
+			 				} 
+			            	 
+			             }
+				     }) 
+				   });  
+				
+			})
+					
+ })
+    
+ 	/*]]>*/	
+
+</script>
+</body>
+</html>

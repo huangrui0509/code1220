@@ -1,0 +1,85 @@
+
+<div >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					填写用户信息
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form" id="fm_user" modelAttribute="ud" th:object="${ud}">
+				 <input type="hidden" th:value="${ud.id}" th:field="*{id}" id="id" name="id"/>
+				  <div class="form-group">
+				    <label for="userNumber" class="col-sm-2 control-label">编号</label>
+				    <div class="col-sm-10">
+				      <input type="text" th:value="${ud.userNumber}" th:field="*{userNumber}" class="form-control" id="userNumber" name="userNumber" placeholder="请输入编号"/>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="userName" class="col-sm-2 control-label">名字</label>
+				    <div class="col-sm-10">
+				      <input type="text" th:value="${ud.userName}" th:field="*{userName}" class="form-control" id="userName" name="userName" placeholder="请输入名字"/>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				   <label for="gender" class="col-sm-2 control-label">性别</label>
+				    <div class="col-sm-10">
+				      <div class="checkbox">
+				        <label class="radio-inline">
+					        <input type="radio" th:value="${ud.gender}" th:field="*{gender}" name="gender" id="gender"  checked="checked" /> 男
+					    </label>
+					    <label class="radio-inline">
+					        <input type="radio" th:value="${ud.gender}" th:field="*{gender}" name="gender" id="gender" /> 女
+					    </label>
+				      </div>
+				    </div>
+				  </div>
+				   <div class="form-group">
+				    <label for="age" class="col-sm-2 control-label">年龄</label>
+				    <div class="col-sm-10">
+				      <input type="text" th:value="${ud.age}" th:field="*{age}" class="form-control" id="age" name="age" placeholder="请输入年龄"/>
+				    </div>
+				  </div>
+				  <div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" >关闭
+						</button>
+						<button type="button" class="btn btn-primary" id="fm_button">提交</button>
+					</div>
+				</form>
+			</div>
+			
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+ <script type="text/javascript">
+ 	/*<![CDATA[*/ 
+ 			
+ 				
+ 				$('#fm_button').click(function(){
+ 					var user=$("#fm_user").serializeObject();
+ 					var d=JSON.stringify(user)
+ 	 				var dataUser={"data": d}
+ 					$.ajax({
+ 						url:'user/addUserByForm',
+ 						type: 'post',
+ 						dataType: 'json',
+ 						data:dataUser,
+ 						success:function(json){
+ 							//刷新表格
+ 							$('#tb_departments').bootstrapTable('refresh');
+ 							//关闭模态框
+ 							$('#myModal').modal('hide');
+ 						}
+ 						
+ 					});
+ 				});
+
+
+
+ 	/*]]>*/	
+  </script>
+

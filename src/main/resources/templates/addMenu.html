@@ -1,0 +1,83 @@
+
+<div >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					填写菜单信息
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" role="form" id="fm_menu" modelAttribute="md" th:object="${md}">
+				 <input type="hidden" th:value="${md.id}" th:field="*{id}" id="id" name="id"/>
+				  <div class="form-group">
+				    <label for="menuName" class="col-sm-2 control-label">菜单名称</label>
+				    <div class="col-sm-10">
+				      <input type="text" th:value="${md.menuName}" th:field="*{menuName}" class="form-control" id="menuName" name="menuName" placeholder="请输入菜单名称"/>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="url" class="col-sm-2 control-label">url</label>
+				    <div class="col-sm-10">
+				      <input type="text" th:value="${md.url}" th:field="*{url}" class="form-control" id="url" name="url" placeholder="请输入URL"/>
+				    </div>
+				  </div>
+				   <div class="form-group">
+				    <label for="describes" class="col-sm-2 control-label">描述</label>
+				    <div class="col-sm-10">
+				      <input type="text" th:value="${md.describes}" th:field="*{describes}" class="form-control" id="describes" name="describes" placeholder="请输入描述"/>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="parentId" class="col-sm-2 control-label">父级id</label>
+				    <div class="col-sm-10">
+				      <input type="text" th:value="${md.parentId}" th:field="*{parentId}" class="form-control" id="parentId" name="parentId" placeholder="请输入父级id"/>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="levels" class="col-sm-2 control-label">level</label>
+				    <div class="col-sm-10">
+				      <input type="text" th:value="${md.levels}" th:field="*{levels}" class="form-control" id="levels" name="levels" placeholder="请输入level"/>
+				    </div>
+				  </div>
+				  <div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" >关闭
+						</button>
+						<button type="button" class="btn btn-primary" id="fm_button">提交</button>
+					</div>
+				</form>
+			</div>
+			
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+ <script type="text/javascript">
+ 	/*<![CDATA[*/ 
+ 			
+ 				
+ 				$('#fm_button').click(function(){
+ 					var menu=$("#fm_menu").serializeObject();
+ 					var d=JSON.stringify(menu)
+ 	 				var dataMenu={"data": d}
+ 					$.ajax({
+ 						url:'menu/addMenuByForm',
+ 						type: 'post',
+ 						dataType: 'json',
+ 						data:dataMenu,
+ 						success:function(json){
+ 							//刷新表格
+ 							$('#tb_departments').bootstrapTable('refresh');
+ 							//关闭模态框
+ 							$('#myModal').modal('hide');
+ 						}
+ 						
+ 					});
+ 				});
+
+
+ 	/*]]>*/	
+  </script>
+

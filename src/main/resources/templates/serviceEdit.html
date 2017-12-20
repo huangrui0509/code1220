@@ -1,0 +1,133 @@
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close"
+				type="button">×</button>
+			<h4 class="modal-title">服务上传</h4>
+		</div>
+		<div class="modal-body">
+			<form id="form-wizard" method="post" enctype="multipart/form-data"
+				name="form-wizard" class="form-horizontal" th:object="${serviceDto}">
+				<input id="flag" type="hidden" name="flag"
+					th:value="${serviceDto.flag}" readonly="readonly" /> <input
+					id="fileSize" type="hidden" name="fileSize"
+					th:value="${serviceDto.fileSize}" readonly="readonly" /> <input
+					id="fileType" type="hidden" name="fileType"
+					th:value="${serviceDto.fileType}" readonly="readonly" /> <input
+					id="filePath" type="hidden" name="filePath"
+					th:value="${serviceDto.filePath}" readonly="readonly" /> <input
+					id="id" type="hidden" name="id" th:value="${serviceDto.id}"
+					readonly="readonly" /> <input id="fileName" type="hidden"
+					name="fileName" th:value="${serviceDto.fileName}"
+					readonly="readonly" />
+				<div class="form-group">
+					<label for="serviceName">服务名称</label> <input id="serviceName"
+						th:field="*{serviceName}" type="text" name="serviceName"
+						placeholder="请输入服务名称长度需在6~20之间"
+						th:value="${serviceDto.serviceName}" class="form-control" />
+				</div>
+				<div class="form-group">
+					<label for="fileDesc">服务描述</label> <input id="fileDesc"
+						th:field="*{fileDest}" type="text" name="fileDesc"
+						placeholder="请输入服务名称长度需在6~20之间" th:value="${serviceDto.fileDest}"
+						class="form-control" />
+				</div>
+				<div class="form-group">
+					<label for="minInstance">最小实例数</label>
+					<div id="spinner1">
+						<div class="input-group input-small">
+							<input type="text" class="spinner-input form-control"
+								maxlength="3" th:value="${serviceDto.minInstance}"
+								th:field="*{minInstance}" name="minInstance" />
+							<div class="spinner-buttons input-group-btn btn-group-vertical">
+								<button type="button" class="btn spinner-up btn-xs btn-default">
+									<i class="fa fa-angle-up"></i>
+								</button>
+								<button type="button"
+									class="btn spinner-down btn-xs btn-default">
+									<i class="fa fa-angle-down"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="maxInstance">最大实例数</label>
+					<div id="spinner2">
+						<div class="input-group input-small">
+							<input type="text" class="spinner-input form-control"
+								maxlength="3" th:value="${serviceDto.maxInstance}"
+								th:field="*{maxInstance}" name="maxInstance" />
+							<div class="spinner-buttons input-group-btn btn-group-vertical">
+								<button type="button" class="btn spinner-up btn-xs btn-default">
+									<i class="fa fa-angle-up"></i>
+								</button>
+								<button type="button"
+									class="btn spinner-down btn-xs btn-default">
+									<i class="fa fa-angle-down"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="exampleInputFile">服务上传</label> <input type="file"
+						name="files" id="files" />
+					<p class="help-block">请上传服务目前只支持JAR类型</p>
+				</div>
+
+
+			</form>
+		</div>
+
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+			</button>
+			<button type="button" class="btn btn-primary" id="saveButton">提交</button>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="js/fuelux/js/spinner.min.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(function() {
+		$("#saveButton").click(function() {
+			var models = new Array();
+			var str = $('#form-wizard').serializeObject();
+			models.push(str);
+			//序列化的基础参数 
+			var baseData = JSON.stringify(models);
+			var form = $('#form-wizard')[0];
+			//文件参数   
+			var data = new FormData(form);
+			data.append("models", baseData);
+
+			$.ajax({
+				url : 'serviceSave.json',
+				type : 'POST',
+				data : data,
+				async : false,
+				cache : false,
+				contentType : false,
+				processData : false,
+				success : function(result) {
+					//	 $.showMsg(result.msg);
+					console.log(data);
+					$('#myModal').modal('hide');
+					$('#cusTable').bootstrapTable('refresh');
+				},
+				error : function(returndata) {
+					console.error(returndata);
+				}
+			});
+		});
+	});
+	//数值型下拉
+	$('#spinner1').spinner();
+	$('#spinner2').spinner();
+
+	/*]]>*/
+</script>
+<!--spinner-->
+
